@@ -28,6 +28,7 @@ Aplicação web que insere no banco e lista os dados CNAB do arquivo selecionado
 
 ## Uso:
 <ol>
+  <li>Acesse http://localhost:3000/home no seu navegador</li>
   <li>Clique no ícone e esolha o arquivo com os dados CNAB</li>
   <li>
     Acesse o banco de dados com os dados configurados(nome, senha e nome do banco) na porta `5434` e verifique se há uma table transactions com os dados do arquivo
