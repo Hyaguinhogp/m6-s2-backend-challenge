@@ -13,6 +13,7 @@ const Home = () => {
 
         reader.onload = async (e) => {
             const result = e.target?.result
+            console.log(result)
             if (typeof (result) === 'string') {
                 api.post("/transactions/", { "data": result })
                     .then((res) => {

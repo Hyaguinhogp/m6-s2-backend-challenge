@@ -7,9 +7,12 @@ from .models import Transaction
 class TransactionsView(APIView):
     def post(self, request: Request):
         data = request.data
-        data_list_str = data["data"].strip().split("\r\n")
+        data_list_str = data["data"].split("\n")
         data_list_dicts = []
         for n in data_list_str:
+            if n == "":
+                continue
+            
             type = n[0:1]
             date = datetime.strptime(n[1:9], "%Y%m%d").date()
             value = n[9:19]
@@ -37,4 +40,6 @@ class TransactionsView(APIView):
         for transaction in serializer.data:
             Transaction.objects.create(**transaction)
 
-        return Response(serializer.data, status.HTTP_200_OK)
+        print(serializer.data)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
