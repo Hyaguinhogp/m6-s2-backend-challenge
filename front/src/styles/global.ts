@@ -3,9 +3,11 @@ import styled, { createGlobalStyle } from "styled-components";
 export const Global = createGlobalStyle`
 
     :root {
-        --principal-bc-00: #222;
-        --principal-bc-01: #444;
-        --principal-bc-02: #666;
+        --bc-00: #fff;
+        --bc-01: #444;
+        --bc-02: #666;
+
+        --ft-00: #000;
     }
 
     html, body, div, span, applet, object, iframe,
@@ -34,9 +36,10 @@ export const Global = createGlobalStyle`
     }
     body {
         background-color: var(--principal-bc-00);
+        color: var(--ft-00);
         min-height: 100%;
         line-height: 1;
-        font-family: 'Poppins', sans-serif;
+        font-family: 'Inter', sans-serif;
     }
    
     article, aside, details, figcaption, figure, 
