@@ -49,6 +49,7 @@ THIRD_PARTY_APPS = ["rest_framework", "corsheaders"]
 MY_APPS = [
     "users",
     "transactions",
+    "stores",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + MY_APPS
@@ -103,7 +104,7 @@ DATABASES = {
     "sqlite": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
-    }
+    },
 }
 
 

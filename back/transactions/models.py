@@ -1,4 +1,5 @@
 from django.db import models
+from stores.models import Store
 import uuid
 
 
@@ -11,4 +12,4 @@ class Transaction(models.Model):
     card = models.CharField(max_length=12)
     time = models.TimeField(max_length=5)
     owner = models.CharField(max_length=14)
-    store = models.CharField(max_length=19)
+    store = models.ForeignKey(Store, on_delete=models.CASCADE)
