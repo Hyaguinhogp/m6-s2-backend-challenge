@@ -1,37 +1,59 @@
-# CNAB Parser
-Aplicação web que insere no banco e lista os dados CNAB do arquivo selecionado pelo usuário
-<details><summary><b>Tecnologias utilizadas:</b></summary>
-  <ul>
-    <li>Django</li>
-    <li>React</li>
-    <li>Postgresql</li>
-    <li>Docker</li>
-  </ul>
-</details>
+# CNAB Kenzie Parser
 
-## Requisitos:
-<ul>
-  <li>Docker instalado na máquina</li>
-</ul>
+Aplicação web que insere no banco e lista os dados CNAB do arquivo selecionado pelo usuário de forma organizada e legível.
 
-## Instalação:
-<ol>
-  <li>Clone este repositório na sua máquina local: git clone https://github.com/Hyaguinhogp/m6-s2-backend-challenge.git</li>
-  <li>Prepare o arquivo das environments: Crie um arquivo   `.env`   na raiz do repositório e copie o conteúdo do arquivo `.env.example` para ele</li>
-  <li>Insira as informações do banco de dados: escolha o nome, senha e nome do banco que desejar</li>
-</ol>
+## Começando
 
-## Execução:
-<ul>
-  <li>Execute o docker compose: `docker compose up`</li>
-</ul>
+Clone esse repositório para sua máquina: `git clone https://github.com/Hyaguinhogp/m6-s2-backend-challenge.git`
 
-## Uso:
-<ol>
-  <li>Acesse http://localhost:3000/home no seu navegador</li>
-  <li>Clique no ícone e esolha o arquivo com os dados CNAB</li>
-  <li>
-    Acesse o banco de dados com os dados configurados(nome, senha e nome do banco) na porta `5434` e verifique se há uma table transactions com os dados do arquivo
-  </li>
-</ol>
+### Pré-requisitos
+
+A única coisa que precisa para rodar a aplicação é ter o docker instalado na sua máquina, segue a documentação: https://docs.docker.com/desktop.
+
+### Configurando variáveis de ambiente
+
+Na raiz do repositório terá o arquivo `.env.example`:
+
+```
+POSTGRES_USER=
+POSTGRES_PASSWORD=
+POSTGRES_DB=
+```
+
+Estas serão as configurações do banco de dados, você irá preencher com os dados de acesso que desejar, por exemplo:
+
+```
+POSTGRES_USER=joao
+POSTGRES_PASSWORD=1234
+POSTGRES_DB=joaodb
+```
+
+Feito isso basta renomear o arquivo para `.env`
+
+## Executando
+
+Abra um terminal no diretório do repositório e execute:
+
+```
+docker compose build
+docker compose up
+```
+
+## Utilizando
+
+Espere o docker fazer a build e executar a aplicação, após isso no seu navegador acesse `http://localhost:3000/home`, 
+clique no ícone e selecione um arquivo txt contendo os dados no formato CNAB, após isso a aplicação vai organizar os 
+dados por loja, mostrar o tipo de transação e o total.
+
+
+### Acessando o banco
+
+Basta utilizar as informações passadas no `.env` no seu gerenciador de banco de dados na porta 5434.
+
+## Tecnologias utilizadas
+
+* [ReactJs](https://reactjs.org/)
+* [DJango](https://docs.djangoproject.com/en/4.1/)
+* [PostgreSQL](https://www.postgresql.org/)
+* [Docker](https://www.docker.com/)
 
