@@ -9,7 +9,7 @@ export const HomeContent = styled(DefaultContent)`
     display: flex;
     justify-content: center;
     flex-direction: column;
-    height: 100vh;
+    min-height: 100vh;
 
     label {
         display: flex;
@@ -35,12 +35,29 @@ export const TransactionsTable = styled.div`
     display: flex;
     flex-direction: column;
     padding: 20px 0px;
+    margin-bottom: 30px;
     border: 3px solid black;
     border-radius: 20px;
+
+    h1 {
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        margin-bottom: 20px;
+        font-weight: 700;
+    }
+
+    .total {
+        margin-bottom: 0;
+        margin-top: 20px;
+    }
 
     .large { width: 20%; }
     .medium { width: 12%; }
     .thin { width: 8%; }
+
+    .positive { color: green }
+    .negative { color: red }
 `
 
 export const TransactionsTitles = styled.div`

@@ -1,8 +1,14 @@
 import api from "../../services/api"
 import { HomeContainer, HomeContent, Transaction, TransactionsTable, TransactionsTitles } from "./styles"
 
+import { useState } from "react"
 import { AiFillFileAdd } from "react-icons/ai"
-import { useEffect, useState } from "react"
+
+interface IGetTransactionsResponse {
+    store: string,
+    total: number,
+    transactions: ITransaction[]
+}
 
 interface ITransaction {
     cpf: string
@@ -16,7 +22,19 @@ interface ITransaction {
 }
 
 const Home = () => {
-    const [transactions, setTransactions] = useState<ITransaction[]>([])
+    const [transactions, setTransactions] = useState<IGetTransactionsResponse[]>([])
+
+    const formatter = new Intl.NumberFormat('en-Us', {
+        style: 'currency',
+        currency: 'BRL'
+    })
+
+    const refreshTransactions = () => {
+        api.get("/transactions/")
+            .then((res) => {
+                setTransactions(res.data)
+            })
+    }
 
     const showFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
         if (!event.target.files) {
@@ -28,17 +46,57 @@ const Home = () => {
 
         reader.onload = async (e) => {
             const result = e.target?.result
-            console.log(result)
             if (typeof (result) === 'string') {
                 api.post("/transactions/", { "data": result })
                     .then((res) => {
-                        setTransactions(res.data)
-                        console.log(res.data)
+                        refreshTransactions()
                     })
             }
         }
 
         reader.readAsText(event.target.files[0])
+    }
+
+    const formatType = (type: string) => {
+        const typeInNumber = parseInt(type)
+        const types = [
+            "Débito",
+            "Boleto",
+            "Financiamento",
+            "Crédito",
+            "Recebimento Empréstimo",
+            "Vendas",
+            "Recebimento TED",
+            "Recebimento DOC",
+            "Aluguel",
+        ]
+
+        return types[typeInNumber - 1]
+    }
+
+    const formatValue = (value: string, type: string) => {
+        const typeInNumber = parseInt(type)
+        const positiveTransactions = [1, 4, 5, 6, 7, 8]
+
+        if (positiveTransactions.includes(typeInNumber)) {
+            return (
+                <h3 className="medium positive">+ {formatter.format(parseFloat(value))}</h3>
+            )
+        }
+        return (
+            <h3 className="medium negative">- {formatter.format(parseFloat(value))}</h3>
+        )
+    }
+
+    const formatTotal = (total: number) => {
+        if (total < 0) {
+            return (
+                <h1 className="total negative">Total: - {formatter.format(total * -1)}</h1>
+            )
+        }
+        return (
+            <h1 className="total positive">Total: + {formatter.format(total)}</h1>
+        )
     }
 
     return (
@@ -52,34 +110,36 @@ const Home = () => {
                             type="file"
                             onChange={(event) => showFile(event)}
                         />
-                        <AiFillFileAdd className="file_icon"/>
+                        <AiFillFileAdd className="file_icon" />
                     </label>
                 </form>
-                {transactions.length !== 0 && 
-                    <TransactionsTable>
-                        <TransactionsTitles>
-                            <h2 className="medium">CPF</h2>
-                            <h2 className="medium">Cartão</h2>
-                            <h2 className="medium">Proprietário</h2>
-                            <h2 className="large">Loja</h2>
-                            <h2 className="medium">Data</h2>
-                            <h2 className="medium">Horário</h2>
-                            <h2 className="thin">Tipo</h2>
-                            <h2 className="medium">Valor</h2>
-                        </TransactionsTitles>
-                        {transactions.map((transaction) => (
-                            <Transaction>
-                                <h3 className="medium">{transaction.cpf}</h3>
-                                <h3 className="medium">{transaction.card}</h3>
-                                <h3 className="medium">{transaction.owner}</h3>
-                                <h3 className="large">{transaction.store}</h3>
-                                <h3 className="medium">{transaction.date}</h3>
-                                <h3 className="medium">{transaction.time}</h3>
-                                <h3 className="thin">{transaction.type}</h3>
-                                <h3 className="medium">R$ {transaction.value}</h3>
-                            </Transaction> 
-                        ))}
-                    </TransactionsTable>
+                {transactions.length !== 0 &&
+                    transactions.map((transactionList) => (
+                        <TransactionsTable>
+                            <h1>{transactionList.store}</h1>
+                            <TransactionsTitles>
+                                <h2 className="medium">CPF</h2>
+                                <h2 className="medium">Cartão</h2>
+                                <h2 className="medium">Proprietário</h2>
+                                <h2 className="medium">Data</h2>
+                                <h2 className="medium">Horário</h2>
+                                <h2 className="large">Tipo</h2>
+                                <h2 className="medium">Valor</h2>
+                            </TransactionsTitles>
+                            {transactionList.transactions.map((transaction) => (
+                                <Transaction>
+                                    <h3 className="medium">{transaction.cpf}</h3>
+                                    <h3 className="medium">{transaction.card}</h3>
+                                    <h3 className="medium">{transaction.owner}</h3>
+                                    <h3 className="medium">{transaction.date}</h3>
+                                    <h3 className="medium">{transaction.time}</h3>
+                                    <h3 className="large">{formatType(transaction.type)}</h3>
+                                    {formatValue(transaction.value, transaction.type)}
+                                </Transaction>
+                            ))}
+                            {formatTotal(transactionList.total)}
+                        </TransactionsTable>
+                    ))
                 }
             </HomeContent>
         </HomeContainer>

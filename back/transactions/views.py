@@ -19,10 +19,17 @@ class TransactionsView(ListCreateAPIView):
         for store in stores:
             transactions = Transaction.objects.filter(store_id=store.id)
             serializer = TransactionsSerializer(transactions, many=True)
+            total = 0.0
+            for transaction in serializer.data:
+                if transaction["type"] in [2, 3, 9]:
+                    total -= float(transaction["value"])
+                else:
+                    total += float(transaction["value"])
 
             response.append(
                 {
                     "store": store.name,
+                    "total": total,
                     "transactions": serializer.data,
                 }
             )
